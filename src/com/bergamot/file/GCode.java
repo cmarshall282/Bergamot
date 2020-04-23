@@ -16,7 +16,15 @@ public class GCode {
             commands = new ArrayList<>();
 
             while(scanner.hasNextLine()) {
-                commands.add(scanner.nextLine());
+                String command = scanner.nextLine();
+
+                if(command.contains(";")) {
+                    int semicolonIndex = command.indexOf(";");
+                    command = command.substring(0, semicolonIndex);
+                }
+
+                if(command.length() > 0)
+                    commands.add(command);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

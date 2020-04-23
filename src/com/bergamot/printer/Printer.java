@@ -48,7 +48,7 @@ public class Printer {
             int i = inputStream.read();
 
             while(i != 10 && i != -1) {
-                System.out.println(i + ":" + (char)i);
+                //System.out.println(i + ":" + (char)i);
                 i = inputStream.read();
             }
         } catch (IOException e) {
