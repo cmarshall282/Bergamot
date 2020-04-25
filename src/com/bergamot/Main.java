@@ -14,7 +14,8 @@ public class Main {
         }*/
 
         //printer.executeCommand("G28");
-        printer.printFile(new GCode(new File("tests/SimpleMove.gco")));
-        //printer.printFile(new GCode(new File("tests/MSMV2E3D_chris_test.gcode")));
+        //printer.printFile(new GCode(new File("tests/SimpleMove.gco")));
+        //printer.printFile(new GCode(new File("tests/SimpleHeat.gco")));
+        printer.printFile(new GCode(new File("tests/MSMV2E3D_chris_test.gcode")));
     }
 }

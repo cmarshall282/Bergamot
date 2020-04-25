@@ -21,6 +21,7 @@ public class Printer {
         open = printerPort.openPort();
         //TODO Figure out what this line does
         printerPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
+        printerPort.setBaudRate(115200);
 
         try {
             Thread.sleep(500);
@@ -48,7 +49,7 @@ public class Printer {
             int i = inputStream.read();
 
             while(i != 10 && i != -1) {
-                //System.out.println(i + ":" + (char)i);
+                System.out.println(i + ":" + (char)i);
                 i = inputStream.read();
             }
         } catch (IOException e) {
