@@ -8,17 +8,18 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 public class Printer {
-    private boolean open = false;
     private int printTimeout;
     private int printTotal;
+
+    private SerialPort printerPort;
 
     private PrintWriter printWriter;
     private InputStream inputStream;
 
     public Printer(int serialIndex, int printTimeout) {
         //TODO Error In Bound
-        SerialPort printerPort = SerialPort.getCommPorts()[serialIndex];
-        open = printerPort.openPort();
+        printerPort = SerialPort.getCommPorts()[serialIndex];
+        printerPort.openPort();
         //TODO Figure out what this line does
         printerPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
         printerPort.setBaudRate(115200);
@@ -32,11 +33,12 @@ public class Printer {
         printWriter = new PrintWriter(printerPort.getOutputStream());
         inputStream = printerPort.getInputStream();
         this.printTimeout = printTimeout;
-        printTotal = 1;
+        printTotal = 0;
     }
 
     public void executeCommand(String gcode) {
-        System.out.println("Executing: " + gcode);
+
+        System.out.println("Queueing: " + gcode);
         printWriter.write(gcode);
         printWriter.write("\n");
         printWriter.flush();
@@ -49,7 +51,6 @@ public class Printer {
             int i = inputStream.read();
 
             while(i != 10 && i != -1) {
-                System.out.println(i + ":" + (char)i);
                 i = inputStream.read();
             }
         } catch (IOException e) {
@@ -68,6 +69,26 @@ public class Printer {
     }
 
     public boolean needsLeveling() {
-        return printTotal > printTimeout;
+        return printTotal >= printTimeout;
+    }
+
+    public static void printSerialPorts() {
+        for(SerialPort p : SerialPort.getCommPorts()) {
+            System.out.println(p.getSystemPortName());
+        }
+    }
+
+    public void close() {
+        try {
+            printWriter.close();
+            inputStream.close();
+            printerPort.closePort();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetPrintTotal() {
+        printTotal = 0;
     }
 }
